@@ -481,6 +481,7 @@ class TorchForecastingModel(GlobalForecastingModel, ABC):
             logger,
         )
         self.trainer_params["precision"] = precision
+        logger.info(f"fucking precision is {precision}")
 
         # we need to save the initialized TorchForecastingModel as PyTorch-Lightning only saves module checkpoints
         if self.save_checkpoints:
@@ -522,6 +523,8 @@ class TorchForecastingModel(GlobalForecastingModel, ABC):
 
         # prevent lightning from adding callbacks to the callbacks list in `self.trainer_params`
         callbacks = trainer_params_copy.pop("callbacks", None)
+        logger.info('fucking trainer params=%s', trainer_params_copy)
+        del trainer_params_copy['precision']
         return pl.Trainer(
             callbacks=[cb for cb in callbacks] if callbacks is not None else callbacks,
             **trainer_params_copy,
